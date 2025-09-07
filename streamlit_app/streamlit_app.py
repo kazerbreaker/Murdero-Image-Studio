@@ -213,7 +213,7 @@ if clear_clicked:
 if st.session_state.generated_image:
     with st.container():
         st.markdown('<div class="image-container">', unsafe_allow_html=True)
-        st.image(st.session_state.generated_image, width='stretch', caption="Your Generated Image")
+        st.image(st.session_state.generated_image, use_column_width=True, caption="Your Generated Image")
         
         # Download button using BytesIO
         img_bytes = io.BytesIO()
