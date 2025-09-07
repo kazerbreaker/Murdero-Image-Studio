@@ -156,9 +156,9 @@ with st.expander("Advanced Settings"):
 # Buttons
 col_btn1, col_btn2 = st.columns(2)
 with col_btn1:
-    generate_clicked = st.button("Generate Image", type="primary", width='stretch')
+    generate_clicked = st.button("Generate Image", type="primary", use_container_width=True)
 with col_btn2:
-    clear_clicked = st.button("New Image", type="secondary", width='stretch')
+    clear_clicked = st.button("New Image", type="secondary", use_container_width=True)
 
 # Main area for image output (improved layout)
 st.markdown("---")
@@ -206,7 +206,7 @@ if st.session_state.generated_image:
             data=img_bytes.getvalue(),
             file_name=f"generated_image_{time.strftime('%Y%m%d-%H%M%S')}.png",
             mime="image/png",
-            width='stretch'
+            use_container_width=True
         )
         st.markdown('</div>', unsafe_allow_html=True)
         
