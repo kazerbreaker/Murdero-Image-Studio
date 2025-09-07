@@ -6,14 +6,27 @@ from PIL import Image
 import io
 import time
 
-# Load environment variables from parent directory
-load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))
+# Load environment variables - try multiple locations for local dev and Streamlit Cloud
+# Try parent directory first (local development), then current directory (Streamlit Cloud)
+env_path = os.path.join(os.path.dirname(__file__), '..', '.env')
+if not os.path.exists(env_path):
+    env_path = os.path.join(os.path.dirname(__file__), '.env')
+load_dotenv(dotenv_path=env_path)
 
 def generate_image(prompt, model):
     """Handles the Text-to-Image generation using the selected model."""
     api_key = os.getenv("CHUTES_API_TOKEN")
     if not api_key or api_key == "YOUR_API_KEY_HERE":
-        st.error("API key not found. Please set it in the .env file.")
+        st.error("""
+        API key not found. Please set your Chutes AI API key:
+        
+        **For Local Development:**
+        - Create a `.env` file in the project root with: `CHUTES_API_TOKEN="your_actual_api_key"`
+        
+        **For Streamlit Cloud:**
+        - Go to your app settings → Secrets
+        - Add: `CHUTES_API_TOKEN = "your_actual_api_key"`
+        """)
         st.stop()
     if not prompt:
         st.error("Prompt is required.")
