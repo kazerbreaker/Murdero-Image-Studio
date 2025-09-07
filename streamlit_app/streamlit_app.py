@@ -6,16 +6,21 @@ from PIL import Image
 import io
 import time
 
-# Load environment variables - try multiple locations for local dev and Streamlit Cloud
-# Try parent directory first (local development), then current directory (Streamlit Cloud)
-env_path = os.path.join(os.path.dirname(__file__), '..', '.env')
-if not os.path.exists(env_path):
-    env_path = os.path.join(os.path.dirname(__file__), '.env')
-load_dotenv(dotenv_path=env_path)
+# Load environment variables - use Streamlit secrets for Cloud, .env for local
+try:
+    # Try Streamlit secrets first (for Cloud deployment)
+    api_key = st.secrets["CHUTES_API_TOKEN"]
+except (KeyError, FileNotFoundError):
+    # Fall back to .env file (for local development)
+    env_path = os.path.join(os.path.dirname(__file__), '..', '.env')
+    if not os.path.exists(env_path):
+        env_path = os.path.join(os.path.dirname(__file__), '.env')
+    load_dotenv(dotenv_path=env_path)
+    api_key = os.getenv("CHUTES_API_TOKEN")
 
 def generate_image(prompt, model):
     """Handles the Text-to-Image generation using the selected model."""
-    api_key = os.getenv("CHUTES_API_TOKEN")
+    # Use the API key loaded at the module level
     if not api_key or api_key == "YOUR_API_KEY_HERE":
         st.error("""
         API key not found. Please set your Chutes AI API key:
